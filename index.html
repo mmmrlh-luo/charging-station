@@ -123,7 +123,9 @@
 </div>
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js">// District filter delegation
+document.getElementById("districtFilter").addEventListener("click",function(e){const btn=e.target.closest(".filter-btn");if(!btn)return;this.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");btn.setAttribute("aria-pressed","true");this.querySelectorAll(".filter-btn").forEach(x=>{if(x!==btn)x.setAttribute("aria-pressed","false")});curRegion=btn.dataset.region;rdr()});
+</script>
 <script>
 // =================================== DATA ===================================
 
@@ -182,8 +184,8 @@ function getCityCounts(){const c={};S.forEach(s=>{c[s.city]=(c[s.city]||0)+1});r
 function getRegionCounts(city){const f=city==="all"?S:S.filter(s=>s.city===city);const r={};f.forEach(s=>{r[s.region]=(r[s.region]||0)+1});return r}
 function flt(){return S.filter(s=>{if(curV!=="all"){const vi=vOrder.indexOf(s.v[s.v.length-1]),si=vOrder.indexOf(curV);if(vi<si)return false}if(curCity!=="all"&&s.city!==curCity)return false;if(curRegion!=="all"&&s.region!==curRegion)return false;return true})}
 
-function renderFilters(){const cc=getCityCounts(),cs=Object.keys(cc).sort();let h='<button class="city-btn active" data-city="all">全部 <span class="count">('+S.length+')</span></button>';cs.forEach(c=>{h+='<button class="city-btn'+(curCity===c?' active':'')+'" data-city="'+c+'">'+c+' <span class="count">('+cc[c]+')</span></button>'});document.getElementById("cityFilter").innerHTML=h
-const dw=document.getElementById("districtFilter"),dl=document.getElementById("districtLabel");if(curCity==="all"||curCity==="佛山"||curCity==="中山"){dw.classList.remove("show");dl.style.display="none";curRegion="all"}else{dw.classList.add("show");dl.style.display="block";const rc=getRegionCounts(curCity),rs=Object.keys(rc).sort();let rh='<button class="filter-btn active" data-region="all">全部 <span class="count">('+flt().length+')</span></button>';rs.forEach(r=>{rh+='<button class="filter-btn'+(curRegion===r?' active':'')+'" data-region="'+r+'">'+r+' <span class="count">('+rc[r]+')</span></button>'});dw.innerHTML=rh;dw.querySelectorAll(".filter-btn").forEach(el=>{el.addEventListener("click",()=>{dw.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));el.classList.add("active");curRegion=el.dataset.region;rdr()})})}}
+function renderFilters(){const cc=getCityCounts(),cs=Object.keys(cc).sort();let h='<button class="city-btn'+(curCity==="all"?' active':'')+'" data-city="all">全部 <span class="count">('+S.length+')</span></button>';cs.forEach(c=>{h+='<button class="city-btn'+(curCity===c?' active':'')+'" data-city="'+c+'">'+c+' <span class="count">('+cc[c]+')</span></button>'});document.getElementById("cityFilter").innerHTML=h
+const dw=document.getElementById("districtFilter"),dl=document.getElementById("districtLabel");if(curCity==="all"||curCity==="佛山"||curCity==="中山"){dw.classList.remove("show");dl.style.display="none";curRegion="all"}else{dw.classList.add("show");dl.style.display="block";const rc=getRegionCounts(curCity),rs=Object.keys(rc).sort();let rh='<button class="filter-btn'+(curRegion==="all"?' active':'')+'" data-region="all">全部 <span class="count">('+flt().length+')</span></button>';rs.forEach(r=>{rh+='<button class="filter-btn'+(curRegion===r?' active':'')+'" data-region="'+r+'">'+r+' <span class="count">('+rc[r]+')</span></button>'});dw.innerHTML=rh}}
 
 // ============================== MAP ========================================
 function mCol(m){if(m>=17)return"#9b59b6";if(m>=12)return"#e74c3c";if(m>=10)return"#f39c12";return"#00b894"}
@@ -221,8 +223,10 @@ let tt=null;function st(m){const t=document.getElementById("toast");t.textConten
 initM();rdr();
 
 document.querySelectorAll("#vehicleFilter .v-opt").forEach(el=>{el.addEventListener("click",()=>{document.querySelectorAll("#vehicleFilter .v-opt").forEach(x=>x.classList.remove("active"));el.classList.add("active");el.setAttribute("aria-pressed","true");document.querySelectorAll("#vehicleFilter .v-opt").forEach(x=>{if(x!==el)x.setAttribute("aria-pressed","false")});curV=el.dataset.vehicle;rdr()});el.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" ")this.click()})});
-document.getElementById("cityFilter").addEventListener("click",function(e){const btn=e.target.closest(".city-btn");if(!btn)return;this.querySelectorAll(".city-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");btn.setAttribute("aria-pressed","true");this.querySelectorAll(".city-btn").forEach(x=>{if(x!==btn)x.setAttribute("aria-pressed","false")});curCity=btn.dataset.city;curRegion="all";rdr()});
+
 document.getElementById("districtFilter").addEventListener("click",function(e){const btn=e.target.closest(".filter-btn");if(!btn)return;this.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");curRegion=btn.dataset.region;rdr()});
+// District filter delegation
+document.getElementById("districtFilter").addEventListener("click",function(e){const btn=e.target.closest(".filter-btn");if(!btn)return;this.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");btn.setAttribute("aria-pressed","true");this.querySelectorAll(".filter-btn").forEach(x=>{if(x!==btn)x.setAttribute("aria-pressed","false")});curRegion=btn.dataset.region;rdr()});
 </script>
 </body>
 </html>
